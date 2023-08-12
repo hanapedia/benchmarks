@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    rca: ignore
+  creationTimestamp: null
+  name: content-db
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: content-db
+    spec:
+      containers:
+      - image: hiroki11hanada/stateful-unit-mongo:v0.0.4
+        name: content-db
+        ports:
+        - containerPort: 27017
+          name: mongo
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+      volumes:
+      - configMap:
+          items:
+          - key: env
+            path: .env
+          name: content-db-env
+        name: env
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: content-db
+  namespace: the-bench
+spec:
+  ports:
+  - name: mongo
+    port: 27017
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: content-db
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  env: |-
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: password
+    MONGO_INITDB_DATABASE: mongo
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: content-db-env
+  namespace: the-bench
+

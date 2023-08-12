@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: category
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: category
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: category
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: category
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: category-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: category
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: category
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: |
+    # Category service
+    # Manage product Categories
+    version: v0.0.4
+    name: category
+    ingressAdapters:
+    # Get Categories
+    - stateless:
+        variant: rest
+        action: read
+        route: get
+      steps:
+      - egressAdapter:
+          stateful:
+            name: content-db
+            variant: mongo
+            action: read
+            size: small
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: category-config
+  namespace: the-bench
+

@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: payment
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: payment
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: payment
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: payment-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: payment
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: payment
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: |
+    # paymet service
+    version: v0.0.4
+    name: payment
+    ingressAdapters:
+    - stateless:
+        variant: rest
+        action: write
+        route: pay
+      steps:
+      - egressAdapter:
+          stateful:
+            name: payment-db
+            variant: mongo
+            action: write
+            size: small
+
+    # refund
+    - stateless:
+        variant: rest
+        action: write
+        route: refund
+      steps:
+      - egressAdapter:
+          stateful:
+            name: payment-db
+            variant: mongo
+            action: write
+            size: small
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: payment-config
+  namespace: the-bench
+

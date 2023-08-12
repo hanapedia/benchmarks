@@ -1,0 +1,127 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: profile
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: profile
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: profile
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: profile-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: profile
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: profile
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: |
+    # Profile service
+    # Manage User profie
+    version: v0.0.4
+    name: profile
+    ingressAdapters:
+    # Get User profile
+    - stateless:
+        variant: rest
+        action: read
+        route: get
+      steps:
+      - egressAdapter:
+          stateful:
+            name: user-db
+            variant: mongo
+            action: read
+            size: medium
+
+    # create User profile
+    - stateless:
+        variant: rest
+        action: write
+        route: create
+      steps:
+      - egressAdapter:
+          stateful:
+            name: user-db
+            variant: mongo
+            action: write
+            size: medium
+
+    # update User profile
+    - stateless:
+        variant: rest
+        action: write
+        route: update
+      steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateful:
+            name: user-db
+            variant: mongo
+            action: write
+            size: medium
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: user-preference
+            action: write
+            route: update
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: profile-config
+  namespace: the-bench
+

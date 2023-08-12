@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: customer-support
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-support
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: customer-support
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: customer-support
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: customer-support-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: customer-support
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: customer-support
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: |
+    # Customer support service
+    version: v0.0.4
+    name: customer-support
+    ingressAdapters:
+    - stateless:
+        variant: rest
+        action: write
+        route: inquire
+      steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateful:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: customer-support-config
+  namespace: the-bench
+

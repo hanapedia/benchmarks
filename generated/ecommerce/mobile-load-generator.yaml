@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    rca: ignore
+  creationTimestamp: null
+  name: mobile-lg
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mobile-lg
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mobile-lg
+    spec:
+      containers:
+      - image: hiroki11hanada/tb-load-generator:v0.0.4
+        name: mobile-lg
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 1Gi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /data/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: config.json
+          - key: routes
+            path: routes.json
+          name: mobile-lg-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: mobile-lg
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: mobile-lg
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: '{"vus":100,"duration":"60m","urlPrefix":"http://mobile:8080/"}'
+  routes: '[{"route":"signup","method":"POST","weight":1},{"route":"login","method":"POST","weight":10},{"route":"logout","method":"POST","weight":5},{"route":"search","method":"GET","weight":50},{"route":"product","method":"GET","weight":80},{"route":"editcart","method":"POST","weight":10},{"route":"editwishlist","method":"POST","weight":10},{"route":"checkout","method":"POST","weight":8},{"route":"cart","method":"GET","weight":10},{"route":"wishlist","method":"GET","weight":10},{"route":"profile","method":"POST","weight":3},{"route":"browseorder","method":"POST","weight":10},{"route":"cancel","method":"POST","weight":1},{"route":"reschedule","method":"POST","weight":1},{"route":"return","method":"POST","weight":1},{"route":"review","method":"POST","weight":5},{"route":"inquire","method":"POST","weight":1}]'
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: mobile-lg-config
+  namespace: the-bench
+

@@ -1,0 +1,92 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: notification
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: notification
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: notification
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: notification-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: notification
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: notification
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: "# Notification service\n# Manages notifications\nversion: v0.0.4\nname:
+    notification\ningressAdapters:\n# Sign up\n- stateless:\n    variant: rest\n    action:
+    write\n    route: signup\n  steps:\n  - egressAdapter:\n      stateful:\n        name:
+    customer-db\n        variant: mongo\n        action: write\n        size: small\n\n#
+    Log in\n- stateless:\n    action: write\n    variant: rest\n    route: login\n
+    \ steps:\n  - egressAdapter:\n      stateful:\n        name: customer-db\n        variant:
+    mongo\n        action: write\n        size: small\n\n# Log out\n- stateless:\n
+    \   action: write\n    variant: rest\n    route: logout\n  steps:\n  - egressAdapter:\n
+    \     stateful:\n        name: customer-db\n        variant: mongo\n        action:
+    write\n        size: small\n\n# Order create\n- stateless:\n    action: write\n
+    \   variant: rest\n    route: ordercreate\n  steps:\n  - egressAdapter:\n      stateful:\n
+    \       name: customer-db\n        variant: mongo\n        action: write\n        size:
+    small\n\n# Order cancel\n- stateless:\n    action: write\n    variant: rest\n
+    \   route: ordercancel\n  steps:\n  - egressAdapter:\n      stateful:\n        name:
+    customer-db\n        variant: mongo\n        action: write\n        size: small\n\n#
+    Order rescheduled \n- stateless:\n    action: write\n    variant: rest\n    route:
+    orderrescheduled\n  steps:\n  - egressAdapter:\n      stateful:\n        name:
+    customer-db\n        variant: mongo\n        action: write\n        size: small\n\n#
+    Order returned \n- stateless:\n    action: write\n    variant: rest\n    route:
+    return\n  steps:\n  - egressAdapter:\n      stateful:\n        name: customer-db\n
+    \       variant: mongo\n        action: write\n        size: small\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: notification-config
+  namespace: the-bench
+

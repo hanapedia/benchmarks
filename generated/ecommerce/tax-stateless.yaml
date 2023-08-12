@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: tax
+  namespace: the-bench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tax
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tax
+    spec:
+      containers:
+      - image: hiroki11hanada/service-unit:v0.0.4
+        name: tax
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 125m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config/
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: config
+            path: service-unit.yaml
+          name: tax-config
+        name: config
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: tax
+  namespace: the-bench
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 0
+  selector:
+    app: tax
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+data:
+  config: |
+    # tax service
+    version: v0.0.4
+    name: tax
+    ingressAdapters:
+    - stateless:
+        variant: rest
+        action: read
+        route: get
+      steps: []
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: tax-config
+  namespace: the-bench
+
