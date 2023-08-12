@@ -1,0 +1,21 @@
+# Customer support service
+version: v0.0.4
+name: customer-support
+ingressAdapters:
+- stateless:
+    variant: rest
+    action: write
+    route: inquire
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small

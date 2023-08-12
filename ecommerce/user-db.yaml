@@ -1,0 +1,6 @@
+# User DB
+version: v0.0.4
+name: user-db
+ingressAdapters:
+- stateful:
+    variant: mongo
