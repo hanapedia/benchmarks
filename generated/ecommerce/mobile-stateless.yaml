@@ -63,7 +63,7 @@ status:
 ---
 apiVersion: v1
 data:
-  config: |+
+  config: |
     ---
     # mobile service
     # Gateway for mobile clients
@@ -125,6 +125,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: search
             action: read
             route: search
@@ -153,6 +159,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: cart
             action: write
             route: update
@@ -164,6 +176,12 @@ data:
         route: editwishlist
         weight: 10
       steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
       - egressAdapter:
           stateless:
             variant: rest
@@ -181,6 +199,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: order
             action: write
             route: checkout
@@ -192,6 +216,12 @@ data:
         route: cart
         weight: 10
       steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
       - egressAdapter:
           stateless:
             variant: rest
@@ -209,6 +239,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: wishlist
             action: read
             route: get
@@ -220,6 +256,12 @@ data:
         route: profile
         weight: 3
       steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
       - egressAdapter:
           stateless:
             variant: rest
@@ -237,6 +279,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: order
             action: read
             route: get
@@ -248,6 +296,12 @@ data:
         route: cancel
         weight: 1
       steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
       - egressAdapter:
           stateless:
             variant: rest
@@ -265,6 +319,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: order
             action: write
             route: reschedule
@@ -276,6 +336,12 @@ data:
         route: return
         weight: 1
       steps:
+      - egressAdapter:
+          stateless:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
       - egressAdapter:
           stateless:
             variant: rest
@@ -293,6 +359,12 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: review
             action: write
             route: post
@@ -307,10 +379,15 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - egressAdapter:
+          stateless:
+            variant: rest
             service: customer-support
             action: write
             route: inquire
-
 kind: ConfigMap
 metadata:
   creationTimestamp: null

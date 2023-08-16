@@ -10,12 +10,6 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
         service: cart
         action: read
         route: get
@@ -57,12 +51,6 @@ ingressAdapters:
     route: get
   steps:
   - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
       stateful:
         name: order-db
         variant: mongo
@@ -87,12 +75,6 @@ ingressAdapters:
     action: write
     route: cancel
   steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
   - egressAdapter:
       stateful:
         name: order-db
@@ -130,12 +112,6 @@ ingressAdapters:
     action: write
     route: reschedule
   steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
   - egressAdapter:
       stateful:
         name: order-db

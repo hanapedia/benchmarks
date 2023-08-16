@@ -76,12 +76,6 @@ data:
         route: update
       steps:
       - egressAdapter:
-          stateless:
-            variant: rest
-            service: auth
-            action: read
-            route: authenticate
-      - egressAdapter:
           stateful:
             name: cart-db
             variant: mongo
@@ -112,12 +106,6 @@ data:
         variant: rest
         route: get
       steps:
-      - egressAdapter:
-          stateless:
-            variant: rest
-            service: auth
-            action: read
-            route: authenticate
       - egressAdapter:
           stateful:
             name: cart-db

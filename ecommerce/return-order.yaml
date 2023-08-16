@@ -10,12 +10,6 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
         service: cost-calculation
         action: write
         route: return

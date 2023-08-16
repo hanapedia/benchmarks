@@ -59,6 +59,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: search
         action: read
         route: search
@@ -87,6 +93,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: cart
         action: write
         route: update
@@ -98,6 +110,12 @@ ingressAdapters:
     route: editwishlist
     weight: 10
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest
@@ -115,6 +133,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: order
         action: write
         route: checkout
@@ -126,6 +150,12 @@ ingressAdapters:
     route: cart
     weight: 10
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest
@@ -143,6 +173,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: wishlist
         action: read
         route: get
@@ -154,6 +190,12 @@ ingressAdapters:
     route: profile
     weight: 3
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest
@@ -171,6 +213,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: order
         action: read
         route: get
@@ -182,6 +230,12 @@ ingressAdapters:
     route: cancel
     weight: 1
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest
@@ -199,6 +253,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: order
         action: write
         route: reschedule
@@ -210,6 +270,12 @@ ingressAdapters:
     route: return
     weight: 1
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest
@@ -227,6 +293,12 @@ ingressAdapters:
   - egressAdapter:
       stateless:
         variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
         service: review
         action: write
         route: post
@@ -238,6 +310,12 @@ ingressAdapters:
     route: inquire
     weight: 1
   steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
   - egressAdapter:
       stateless:
         variant: rest

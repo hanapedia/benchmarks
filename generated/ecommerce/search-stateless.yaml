@@ -78,12 +78,6 @@ data:
       - egressAdapter:
           stateless:
             variant: rest
-            service: auth
-            action: read
-            route: authenticate
-      - egressAdapter:
-          stateless:
-            variant: rest
             service: category
             action: read
             route: get

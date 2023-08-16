@@ -8,12 +8,6 @@ ingressAdapters:
     route: inquire
   steps:
   - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
       stateful:
         name: customer-db
         variant: mongo
