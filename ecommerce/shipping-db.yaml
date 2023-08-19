@@ -1,6 +1,0 @@
-# Shipping DB
-version: v0.0.4
-name: shipping-db
-ingressAdapters:
-- stateful:
-    variant: mongo

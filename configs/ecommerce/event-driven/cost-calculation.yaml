@@ -1,0 +1,88 @@
+# Cost Calculation service
+version: v0.0.5
+name: cost-calculation
+ingressAdapters:
+- stateless:
+    variant: rest
+    action: write
+    route: calculate
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: product
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: profile
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: scheduling
+        action: read
+        route: calculate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: shipping
+        action: read
+        route: calculate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: tax
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: discount
+        action: read
+        route: get
+
+# return
+- stateless:
+    variant: rest
+    action: write
+    route: return
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: auth
+        action: read
+        route: authenticate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: profile
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: scheduling
+        action: read
+        route: calculate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: shipping
+        action: read
+        route: calculate
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: tax
+        action: read
+        route: get

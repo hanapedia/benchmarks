@@ -1,0 +1,7 @@
+# Contente DB
+version: v0.0.5
+name: content-db
+ingressAdapters:
+- stateful:
+    variant: mongo
+

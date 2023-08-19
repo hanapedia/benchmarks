@@ -1,6 +1,0 @@
-# Marketing DB
-version: v0.0.4
-name: marketing-db
-ingressAdapters:
-- stateful:
-    variant: mongo

@@ -1,6 +1,0 @@
-# Order DB
-version: v0.0.4
-name: order-db
-ingressAdapters:
-- stateful:
-    variant: mongo

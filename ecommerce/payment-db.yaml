@@ -1,7 +1,0 @@
-# Payment DB
-version: v0.0.4
-name: payment-db
-ingressAdapters:
-- stateful:
-    variant: mongo
-

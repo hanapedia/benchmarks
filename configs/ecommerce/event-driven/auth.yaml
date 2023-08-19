@@ -1,0 +1,86 @@
+# Auth service
+# Authentication and authorization for users
+version: v0.0.5
+name: auth
+ingressAdapters:
+# Sign up
+- stateless:
+    action: write
+    variant: rest
+    route: signup
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: signup
+
+# Log in
+- stateless:
+    action: write
+    variant: rest
+    route: login
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: profile
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: user-preference
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: localization
+        action: read
+        route: get
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: login
+
+# Log out
+- stateless:
+    action: write
+    variant: rest
+    route: logout
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: logout
+
+# Authenticate
+- stateless:
+    action: read
+    variant: rest
+    route: authenticate
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: read
+        size: small

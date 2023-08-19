@@ -1,6 +1,0 @@
-# Customer DB
-version: v0.0.4
-name: customer-db
-ingressAdapters:
-- stateful:
-    variant: mongo

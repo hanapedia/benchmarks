@@ -1,0 +1,65 @@
+# Recommendation service
+# Manage recommendations for users
+version: v0.0.5
+name: recommendation
+ingressAdapters:
+# Get recommendations
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: small
+
+# Update recommendations after product search
+- broker:
+    variant: kafka
+    topic: productsearched
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: small
+
+# Update recommendations after cart edit
+- broker:
+    variant: kafka
+    topic: cartedited
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: small
+
+# Update recommendations after wishlist edit
+- broker:
+    variant: kafka
+    topic: wishlistedited
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: small
+
+# Update recommendations after review posted
+- broker:
+    variant: kafka
+    topic: reviewposted
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: small

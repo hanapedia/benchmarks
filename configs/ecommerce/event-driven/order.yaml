@@ -1,0 +1,96 @@
+# Order service
+version: v0.0.5
+name: order
+ingressAdapters:
+- stateless:
+    variant: rest
+    action: write
+    route: checkout
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: cart
+        action: read
+        route: get
+  - egressAdapter:
+      stateful:
+        name: order-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: ordercreated
+
+# Browse order
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: order-db
+        variant: mongo
+        action: read
+        size: medium
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: tracking
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: scheduling
+        action: read
+        route: get
+
+# Cancel order
+- stateless:
+    variant: rest
+    action: write
+    route: cancel
+  steps:
+  - egressAdapter:
+      stateful:
+        name: order-db
+        variant: mongo
+        action: read
+        size: medium
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: ordercancelled
+
+# order reschedule delivery
+- stateless:
+    variant: rest
+    action: write
+    route: reschedule
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: tracking
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: scheduling
+        action: read
+        route: get
+  - egressAdapter:
+      stateful:
+        name: order-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: orderrescheduled

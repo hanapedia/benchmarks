@@ -1,0 +1,50 @@
+# paymet service
+version: v0.0.5
+name: payment
+ingressAdapters:
+- broker:
+    variant: kafka
+    topic: ordercreated
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: cost-calculation
+        action: write
+        route: calculate
+  - egressAdapter:
+      stateful:
+        name: payment-db
+        variant: mongo
+        action: write
+        size: small
+
+# refund after cancel
+- broker:
+    variant: kafka
+    topic: ordercancelled
+  steps:
+  - egressAdapter:
+      stateful:
+        name: payment-db
+        variant: mongo
+        action: write
+        size: small
+
+# return
+- broker:
+    variant: kafka
+    topic: returnrequested
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: cost-calculation
+        action: write
+        route: return
+  - egressAdapter:
+      stateful:
+        name: payment-db
+        variant: mongo
+        action: write
+        size: small

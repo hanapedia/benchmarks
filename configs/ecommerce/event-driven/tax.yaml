@@ -1,0 +1,9 @@
+# tax service
+version: v0.0.5
+name: tax
+ingressAdapters:
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps: []

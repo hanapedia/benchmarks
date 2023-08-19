@@ -1,0 +1,88 @@
+# Notification service
+# Manages notifications
+version: v0.0.5
+name: notification
+ingressAdapters:
+# Sign up
+- broker:
+    variant: kafka
+    topic: signup
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Log in
+- broker:
+    variant: kafka
+    topic: login
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Log out
+- broker:
+    variant: kafka
+    topic: logout
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order create
+- broker:
+    variant: kafka
+    topic: ordercreated
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order cancel
+- broker:
+    variant: kafka
+    topic: ordercancelled
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order rescheduled 
+- broker:
+    variant: kafka
+    topic: orderrescheduled
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order returned 
+- broker:
+    variant: kafka
+    topic: returnrequested
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small

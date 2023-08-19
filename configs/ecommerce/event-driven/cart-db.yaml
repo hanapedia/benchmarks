@@ -1,0 +1,6 @@
+# Cart DB
+version: v0.0.5
+name: cart-db
+ingressAdapters:
+- stateful:
+    variant: mongo

@@ -1,0 +1,17 @@
+# Category service
+# Manage product Categories
+version: v0.0.5
+name: category
+ingressAdapters:
+# Get Categories
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: content-db
+        variant: mongo
+        action: read
+        size: small

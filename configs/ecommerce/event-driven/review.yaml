@@ -1,0 +1,34 @@
+# Review service
+# Manage product reviews
+version: v0.0.5
+name: review
+ingressAdapters:
+# Get reviews for product
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: read
+        size: medium
+
+# write reviews for product
+- stateless:
+    variant: rest
+    action: write
+    route: post
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      broker:
+        variant: kafka
+        topic: reviewposted
