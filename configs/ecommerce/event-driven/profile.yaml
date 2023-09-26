@@ -1,48 +1,47 @@
 # Profile service
 # Manage User profie
-version: v0.0.5
+version: v0.1.0
 name: profile
-ingressAdapters:
-# Get User profile
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: read
-        size: medium
-
-# create User profile
-- broker:
-    variant: kafka
-    topic: signup
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: medium
-
-# update User profile
-- stateless:
-    variant: rest
-    action: write
-    route: update
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: medium
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: user-preference
-        action: write
-        route: update
+adapters:
+  # Get User profile
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: read
+            size: medium
+    server:
+      variant: rest
+      action: read
+      route: get
+  # create User profile
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: medium
+    consumer:
+      variant: kafka
+      topic: signup
+  # update User profile
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: medium
+      - adapter:
+          invocation:
+            variant: rest
+            service: user-preference
+            action: write
+            route: update
+    server:
+      variant: rest
+      action: write
+      route: update
+deployment: {}

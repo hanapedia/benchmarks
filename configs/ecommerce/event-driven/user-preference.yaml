@@ -1,91 +1,85 @@
 # User Preference service
 # Manage User preference
-version: v0.0.5
+version: v0.1.0
 name: user-preference
-ingressAdapters:
-# Update User preference after order created
-- broker:
-    variant: kafka
-    topic: ordercreated
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Update User preference after sign up
-- broker:
-    variant: kafka
-    topic: signup
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Update User preference after cart edited
-- broker:
-    variant: kafka
-    topic: cartedited
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Update User preference after wishlist edited
-- broker:
-    variant: kafka
-    topic: wishlistedited
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Update User preference after review posted
-- broker:
-    variant: kafka
-    topic: reviewposted
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Update User preference
-- stateless:
-    variant: rest
-    action: write
-    route: update
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Get User preference
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: read
-        size: small
-
+adapters:
+  # Update User preference after order created
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: ordercreated
+  # Update User preference after sign up
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: signup
+  # Update User preference after cart edited
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: cartedited
+  # Update User preference after wishlist edited
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: wishlistedited
+  # Update User preference after review posted
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: reviewposted
+  # Update User preference
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      variant: rest
+      action: write
+      route: update
+  # Get User preference
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      variant: rest
+      action: read
+      route: get
+deployment: {}

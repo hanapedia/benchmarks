@@ -1,6 +1,7 @@
 # Marketing DB
-version: v0.0.5
+version: v0.1.0
 name: marketing-db
-ingressAdapters:
-- stateful:
-    variant: mongo
+adapters:
+  - repository:
+      variant: mongo
+deployment: {}

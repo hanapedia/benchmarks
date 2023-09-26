@@ -1,34 +1,34 @@
 # Cart service
 # Cart for users
-version: v0.0.5
+version: v0.1.0
 name: cart
-ingressAdapters:
-# Edit cart
-- stateless:
-    action: write
-    variant: rest
-    route: update
-  steps:
-  - egressAdapter:
-      stateful:
-        name: cart-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: cartedited
-
-# get cart content
-- stateless:
-    action: read
-    variant: rest
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: cart-db
-        variant: mongo
-        action: read
-        size: small
+adapters:
+  # Edit cart
+  - steps:
+      - adapter:
+          repository:
+            name: cart-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: cartedited
+    server:
+      action: write
+      variant: rest
+      route: update
+  # get cart content
+  - steps:
+      - adapter:
+          repository:
+            name: cart-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      action: read
+      variant: rest
+      route: get
+deployment: {}

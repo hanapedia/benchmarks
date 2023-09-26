@@ -1,88 +1,88 @@
 # Cost Calculation service
-version: v0.0.5
+version: v0.1.0
 name: cost-calculation
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: write
-    route: calculate
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: product
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: profile
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: scheduling
-        action: read
-        route: calculate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: shipping
-        action: read
-        route: calculate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: tax
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: discount
-        action: read
-        route: get
-
-# return
-- stateless:
-    variant: rest
-    action: write
-    route: return
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: profile
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: scheduling
-        action: read
-        route: calculate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: shipping
-        action: read
-        route: calculate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: tax
-        action: read
-        route: get
+adapters:
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: product
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: profile
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: scheduling
+            action: read
+            route: calculate
+      - adapter:
+          invocation:
+            variant: rest
+            service: shipping
+            action: read
+            route: calculate
+      - adapter:
+          invocation:
+            variant: rest
+            service: tax
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: discount
+            action: read
+            route: get
+    server:
+      variant: rest
+      action: write
+      route: calculate
+  # return
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: profile
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: scheduling
+            action: read
+            route: calculate
+      - adapter:
+          invocation:
+            variant: rest
+            service: shipping
+            action: read
+            route: calculate
+      - adapter:
+          invocation:
+            variant: rest
+            service: tax
+            action: read
+            route: get
+    server:
+      variant: rest
+      action: write
+      route: return
+deployment: {}

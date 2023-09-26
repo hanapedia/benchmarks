@@ -1,19 +1,20 @@
 # Return service
-version: v0.0.5
+version: v0.1.0
 name: return-order
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: write
-    route: return
-  steps:
-  - egressAdapter:
-      stateful:
-        name: order-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: returnrequested
+adapters:
+  - steps:
+      - adapter:
+          repository:
+            name: order-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: returnrequested
+    server:
+      variant: rest
+      action: write
+      route: return
+deployment: {}

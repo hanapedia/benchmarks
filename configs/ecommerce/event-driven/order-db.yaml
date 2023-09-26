@@ -1,6 +1,7 @@
 # Order DB
-version: v0.0.5
+version: v0.1.0
 name: order-db
-ingressAdapters:
-- stateful:
-    variant: mongo
+adapters:
+  - repository:
+      variant: mongo
+deployment: {}

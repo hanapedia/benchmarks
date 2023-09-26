@@ -1,30 +1,29 @@
 # Inventory service
 # Manage product Inventory
-version: v0.0.5
+version: v0.1.0
 name: inventory
-ingressAdapters:
-# Get Inventories
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: content-db
-        variant: mongo
-        action: read
-        size: medium
-
-# Update Inventories after cart edit
-- broker:
-    variant: kafka
-    topic: cartedited
-  steps:
-  - egressAdapter:
-      stateful:
-        name: content-db
-        variant: mongo
-        action: write
-        size: small
-
+adapters:
+  # Get Inventories
+  - steps:
+      - adapter:
+          repository:
+            name: content-db
+            variant: mongo
+            action: read
+            size: medium
+    server:
+      variant: rest
+      action: read
+      route: get
+  # Update Inventories after cart edit
+  - steps:
+      - adapter:
+          repository:
+            name: content-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: cartedited
+deployment: {}

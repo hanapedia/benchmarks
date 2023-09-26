@@ -1,16 +1,16 @@
 # shipping service
-version: v0.0.5
+version: v0.1.0
 name: shipping
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: read
-    route: calculate
-  steps:
-  - egressAdapter:
-      stateful:
-        name: shipping-db
-        variant: mongo
-        action: read
-        size: small
-
+adapters:
+  - steps:
+      - adapter:
+          repository:
+            name: shipping-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      variant: rest
+      action: read
+      route: calculate
+deployment: {}

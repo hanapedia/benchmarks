@@ -1,86 +1,84 @@
 # Auth service
 # Authentication and authorization for users
-version: v0.0.5
+version: v0.1.0
 name: auth
-ingressAdapters:
-# Sign up
-- stateless:
-    action: write
-    variant: rest
-    route: signup
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: signup
-
-# Log in
-- stateless:
-    action: write
-    variant: rest
-    route: login
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: profile
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: user-preference
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: localization
-        action: read
-        route: get
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: login
-
-# Log out
-- stateless:
-    action: write
-    variant: rest
-    route: logout
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: logout
-
-# Authenticate
-- stateless:
-    action: read
-    variant: rest
-    route: authenticate
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: read
-        size: small
+adapters:
+  # Sign up
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: signup
+    server:
+      action: write
+      variant: rest
+      route: signup
+  # Log in
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          invocation:
+            variant: rest
+            service: profile
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: user-preference
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: localization
+            action: read
+            route: get
+      - adapter:
+          producer:
+            variant: kafka
+            topic: login
+    server:
+      action: write
+      variant: rest
+      route: login
+  # Log out
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: logout
+    server:
+      action: write
+      variant: rest
+      route: logout
+  # Authenticate
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      action: read
+      variant: rest
+      route: authenticate
+deployment: {}

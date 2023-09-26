@@ -1,30 +1,29 @@
 # Localization service
 # Manage User localization
-version: v0.0.5
+version: v0.1.0
 name: localization
-ingressAdapters:
-# Update User localization after signup
-- broker:
-    variant: kafka
-    topic: signup
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: write
-        size: small
-
-# Get User localization
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: user-db
-        variant: mongo
-        action: read
-        size: small
-
+adapters:
+  # Update User localization after signup
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: write
+            size: small
+    consumer:
+      variant: kafka
+      topic: signup
+  # Get User localization
+  - steps:
+      - adapter:
+          repository:
+            name: user-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      variant: rest
+      action: read
+      route: get
+deployment: {}

@@ -1,15 +1,16 @@
 # Customer support service
-version: v0.0.5
+version: v0.1.0
 name: customer-support
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: write
-    route: inquire
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
+adapters:
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      variant: rest
+      action: write
+      route: inquire
+deployment: {}

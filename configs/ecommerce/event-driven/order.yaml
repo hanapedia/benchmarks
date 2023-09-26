@@ -1,96 +1,94 @@
 # Order service
-version: v0.0.5
+version: v0.1.0
 name: order
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: write
-    route: checkout
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: cart
-        action: read
-        route: get
-  - egressAdapter:
-      stateful:
-        name: order-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: ordercreated
-
-# Browse order
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: order-db
-        variant: mongo
-        action: read
-        size: medium
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: tracking
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: scheduling
-        action: read
-        route: get
-
-# Cancel order
-- stateless:
-    variant: rest
-    action: write
-    route: cancel
-  steps:
-  - egressAdapter:
-      stateful:
-        name: order-db
-        variant: mongo
-        action: read
-        size: medium
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: ordercancelled
-
-# order reschedule delivery
-- stateless:
-    variant: rest
-    action: write
-    route: reschedule
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: tracking
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: scheduling
-        action: read
-        route: get
-  - egressAdapter:
-      stateful:
-        name: order-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      broker:
-        variant: kafka
-        topic: orderrescheduled
+adapters:
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: cart
+            action: read
+            route: get
+      - adapter:
+          repository:
+            name: order-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: ordercreated
+    server:
+      variant: rest
+      action: write
+      route: checkout
+  # Browse order
+  - steps:
+      - adapter:
+          repository:
+            name: order-db
+            variant: mongo
+            action: read
+            size: medium
+      - adapter:
+          invocation:
+            variant: rest
+            service: tracking
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: scheduling
+            action: read
+            route: get
+    server:
+      variant: rest
+      action: read
+      route: get
+  # Cancel order
+  - steps:
+      - adapter:
+          repository:
+            name: order-db
+            variant: mongo
+            action: read
+            size: medium
+      - adapter:
+          producer:
+            variant: kafka
+            topic: ordercancelled
+    server:
+      variant: rest
+      action: write
+      route: cancel
+  # order reschedule delivery
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: tracking
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: scheduling
+            action: read
+            route: get
+      - adapter:
+          repository:
+            name: order-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          producer:
+            variant: kafka
+            topic: orderrescheduled
+    server:
+      variant: rest
+      action: write
+      route: reschedule
+deployment: {}
