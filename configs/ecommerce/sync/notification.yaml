@@ -1,95 +1,90 @@
 # Notification service
 # Manages notifications
-version: v0.0.4
+version: v0.1.0
 name: notification
-ingressAdapters:
-# Sign up
-- stateless:
-    variant: rest
-    action: write
-    route: signup
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Log in
-- stateless:
-    action: write
-    variant: rest
-    route: login
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Log out
-- stateless:
-    action: write
-    variant: rest
-    route: logout
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Order create
-- stateless:
-    action: write
-    variant: rest
-    route: ordercreate
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Order cancel
-- stateless:
-    action: write
-    variant: rest
-    route: ordercancel
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Order rescheduled 
-- stateless:
-    action: write
-    variant: rest
-    route: orderrescheduled
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
-
-# Order returned 
-- stateless:
-    action: write
-    variant: rest
-    route: return
-  steps:
-  - egressAdapter:
-      stateful:
-        name: customer-db
-        variant: mongo
-        action: write
-        size: small
+adapters:
+  # Sign up
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      variant: rest
+      action: write
+      route: signup
+  # Log in
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: login
+  # Log out
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: logout
+  # Order create
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: ordercreate
+  # Order cancel
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: ordercancel
+  # Order rescheduled 
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: orderrescheduled
+  # Order returned 
+  - steps:
+      - adapter:
+          repository:
+            name: customer-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      action: write
+      variant: rest
+      route: return
+deployment: {}

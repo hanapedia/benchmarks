@@ -1,7 +1,7 @@
 # Contente DB
-version: v0.0.4
+version: v0.1.0
 name: content-db
-ingressAdapters:
-- stateful:
-    variant: mongo
-
+adapters:
+  - repository:
+      variant: mongo
+deployment: {}

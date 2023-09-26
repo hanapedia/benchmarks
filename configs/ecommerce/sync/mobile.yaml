@@ -1,324 +1,309 @@
 ---
 # mobile service
 # Gateway for mobile clients
-version: v0.0.4
+version: v0.1.0
 name: mobile
-gateway: # load generator specific
-  virtualUsers: 100
-  duration: 60
-ingressAdapters:
-# Sign up
-- stateless:
-    action: write
-    variant: rest
-    route: signup
-    weight: 1
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: write
-        route: signup
-
-# Log in
-- stateless:
-    action: write
-    variant: rest
-    route: login
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: write
-        route: login
-
-# Log out
-- stateless:
-    action: write
-    variant: rest
-    route: logout
-    weight: 5
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: write
-        route: logout
-
-# Search products
-- stateless:
-    action: read
-    variant: rest
-    route: search
-    weight: 50
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: search
-        action: read
-        route: search
-
-# Search products
-- stateless:
-    action: read
-    variant: rest
-    route: product
-    weight: 80
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: product
-        action: read
-        route: get
-
-# Edit Cart
-- stateless:
-    action: write
-    variant: rest
-    route: editcart
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: cart
-        action: write
-        route: update
-
-# Edit Wishlist
-- stateless:
-    action: write
-    variant: rest
-    route: editwishlist
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: wishlist
-        action: write
-        route: update
-
-# Checkout
-- stateless:
-    action: write
-    variant: rest
-    route: checkout
-    weight: 8
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: order
-        action: write
-        route: checkout
-
-# Browse Cart
-- stateless:
-    action: read
-    variant: rest
-    route: cart
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: cart
-        action: read
-        route: get
-
-# Browse wishlist
-- stateless:
-    action: read
-    variant: rest
-    route: wishlist
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: wishlist
-        action: read
-        route: get
-
-# update profile
-- stateless:
-    action: write
-    variant: rest
-    route: profile
-    weight: 3
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: profile
-        action: write
-        route: update
-
-# Browse Order
-- stateless:
-    action: write
-    variant: rest
-    route: browseorder
-    weight: 10
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: order
-        action: read
-        route: get
-
-# Cancel Order
-- stateless:
-    action: write
-    variant: rest
-    route: cancel
-    weight: 1
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: order
-        action: write
-        route: cancel
-
-# Reschedule
-- stateless:
-    action: write
-    variant: rest
-    route: reschedule
-    weight: 1
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: order
-        action: write
-        route: reschedule
-
-# Return
-- stateless:
-    action: write
-    variant: rest
-    route: return
-    weight: 1
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: return-order
-        action: write
-        route: return
-
-# Review
-- stateless:
-    action: write
-    variant: rest
-    route: review
-    weight: 5
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: review
-        action: write
-        route: post
-
-# Customer support
-- stateless:
-    action: write
-    variant: rest
-    route: inquire
-    weight: 1
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: auth
-        action: read
-        route: authenticate
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: customer-support
-        action: write
-        route: inquire
+adapters:
+  # Sign up
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: write
+            route: signup
+    server:
+      action: write
+      variant: rest
+      route: signup
+      weight: 1
+  # Log in
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: write
+            route: login
+    server:
+      action: write
+      variant: rest
+      route: login
+      weight: 10
+  # Log out
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: write
+            route: logout
+    server:
+      action: write
+      variant: rest
+      route: logout
+      weight: 5
+  # Search products
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: search
+            action: read
+            route: search
+    server:
+      action: read
+      variant: rest
+      route: search
+      weight: 50
+  # Search products
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: product
+            action: read
+            route: get
+    server:
+      action: read
+      variant: rest
+      route: product
+      weight: 80
+  # Edit Cart
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: cart
+            action: write
+            route: update
+    server:
+      action: write
+      variant: rest
+      route: editcart
+      weight: 10
+  # Edit Wishlist
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: wishlist
+            action: write
+            route: update
+    server:
+      action: write
+      variant: rest
+      route: editwishlist
+      weight: 10
+  # Checkout
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: order
+            action: write
+            route: checkout
+    server:
+      action: write
+      variant: rest
+      route: checkout
+      weight: 8
+  # Browse Cart
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: cart
+            action: read
+            route: get
+    server:
+      action: read
+      variant: rest
+      route: cart
+      weight: 10
+  # Browse wishlist
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: wishlist
+            action: read
+            route: get
+    server:
+      action: read
+      variant: rest
+      route: wishlist
+      weight: 10
+  # update profile
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: profile
+            action: write
+            route: update
+    server:
+      action: write
+      variant: rest
+      route: profile
+      weight: 3
+  # Browse Order
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: order
+            action: read
+            route: get
+    server:
+      action: write
+      variant: rest
+      route: browseorder
+      weight: 10
+  # Cancel Order
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: order
+            action: write
+            route: cancel
+    server:
+      action: write
+      variant: rest
+      route: cancel
+      weight: 1
+  # Reschedule
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: order
+            action: write
+            route: reschedule
+    server:
+      action: write
+      variant: rest
+      route: reschedule
+      weight: 1
+  # Return
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: return-order
+            action: write
+            route: return
+    server:
+      action: write
+      variant: rest
+      route: return
+      weight: 1
+  # Review
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: review
+            action: write
+            route: post
+    server:
+      action: write
+      variant: rest
+      route: review
+      weight: 5
+  # Customer support
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: auth
+            action: read
+            route: authenticate
+      - adapter:
+          invocation:
+            variant: rest
+            service: customer-support
+            action: write
+            route: inquire
+    server:
+      action: write
+      variant: rest
+      route: inquire
+      weight: 1
+deployment:
+  gateway:
+    virtualUsers: 100
+    duration: 60

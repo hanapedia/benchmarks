@@ -1,28 +1,28 @@
 # paymet service
-version: v0.0.4
+version: v0.1.0
 name: payment
-ingressAdapters:
-- stateless:
-    variant: rest
-    action: write
-    route: pay
-  steps:
-  - egressAdapter:
-      stateful:
-        name: payment-db
-        variant: mongo
-        action: write
-        size: small
-
-# refund
-- stateless:
-    variant: rest
-    action: write
-    route: refund
-  steps:
-  - egressAdapter:
-      stateful:
-        name: payment-db
-        variant: mongo
-        action: write
-        size: small
+adapters:
+  - steps:
+      - adapter:
+          repository:
+            name: payment-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      variant: rest
+      action: write
+      route: pay
+  # refund
+  - steps:
+      - adapter:
+          repository:
+            name: payment-db
+            variant: mongo
+            action: write
+            size: small
+    server:
+      variant: rest
+      action: write
+      route: refund
+deployment: {}

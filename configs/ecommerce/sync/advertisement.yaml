@@ -1,18 +1,18 @@
 # Advertisement service
 # Manage advertisements for users
-version: v0.0.5
+version: v0.1.0
 name: advertisement
-ingressAdapters:
-# Get advertisement
-- stateless:
-    variant: rest
-    action: read
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: marketing-db
-        variant: mongo
-        action: read
-        size: small
-
+adapters:
+  # Get advertisement
+  - steps:
+      - adapter:
+          repository:
+            name: marketing-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      variant: rest
+      action: read
+      route: get
+deployment: {}

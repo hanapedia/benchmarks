@@ -1,42 +1,42 @@
 # Wishlist service
 # Wishlist for users
-version: v0.0.4
+version: v0.1.0
 name: wishlist
-ingressAdapters:
-# Edit wishlist
-- stateless:
-    action: write
-    variant: rest
-    route: update
-  steps:
-  - egressAdapter:
-      stateful:
-        name: cart-db
-        variant: mongo
-        action: write
-        size: small
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: recommendation
-        action: write
-        route: update
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: user-preference
-        action: write
-        route: update
-
-# get wishilist content
-- stateless:
-    action: read
-    variant: rest
-    route: get
-  steps:
-  - egressAdapter:
-      stateful:
-        name: cart-db
-        variant: mongo
-        action: read
-        size: small
+adapters:
+  # Edit wishlist
+  - steps:
+      - adapter:
+          repository:
+            name: cart-db
+            variant: mongo
+            action: write
+            size: small
+      - adapter:
+          invocation:
+            variant: rest
+            service: recommendation
+            action: write
+            route: update
+      - adapter:
+          invocation:
+            variant: rest
+            service: user-preference
+            action: write
+            route: update
+    server:
+      action: write
+      variant: rest
+      route: update
+  # get wishilist content
+  - steps:
+      - adapter:
+          repository:
+            name: cart-db
+            variant: mongo
+            action: read
+            size: small
+    server:
+      action: read
+      variant: rest
+      route: get
+deployment: {}

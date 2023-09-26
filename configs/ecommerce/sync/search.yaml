@@ -1,47 +1,48 @@
 # Search service
 # Search for products
-version: v0.0.4
+version: v0.1.0
 name: search
-ingressAdapters:
-# Search
-- stateless:
-    action: read
-    variant: rest
-    route: search
-  steps:
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: category
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: recommendation
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: user-preference
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: advertisement
-        action: read
-        route: get
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: product
-        action: read
-        route: getmany
-  - egressAdapter:
-      stateless:
-        variant: rest
-        service: recommendation
-        action: write
-        route: update
+adapters:
+  # Search
+  - steps:
+      - adapter:
+          invocation:
+            variant: rest
+            service: category
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: recommendation
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: user-preference
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: advertisement
+            action: read
+            route: get
+      - adapter:
+          invocation:
+            variant: rest
+            service: product
+            action: read
+            route: getmany
+      - adapter:
+          invocation:
+            variant: rest
+            service: recommendation
+            action: write
+            route: update
+    server:
+      action: read
+      variant: rest
+      route: search
+deployment: {}
