@@ -1,0 +1,28 @@
+# scheduling service
+version: v0.0.4
+name: scheduling
+ingressAdapters:
+- stateless:
+    variant: rest
+    action: read
+    route: calculate
+  steps:
+  - egressAdapter:
+      stateful:
+        name: shipping-db
+        variant: mongo
+        action: read
+        size: medium
+
+# get shipment updates
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: shipping-db
+        variant: mongo
+        action: read
+        size: small

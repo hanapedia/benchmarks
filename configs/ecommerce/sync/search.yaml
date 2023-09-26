@@ -1,0 +1,47 @@
+# Search service
+# Search for products
+version: v0.0.4
+name: search
+ingressAdapters:
+# Search
+- stateless:
+    action: read
+    variant: rest
+    route: search
+  steps:
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: category
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: recommendation
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: user-preference
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: advertisement
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: product
+        action: read
+        route: getmany
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: recommendation
+        action: write
+        route: update

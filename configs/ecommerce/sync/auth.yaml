@@ -1,0 +1,110 @@
+# Auth service
+# Authentication and authorization for users
+version: v0.0.4
+name: auth
+ingressAdapters:
+# Sign up
+- stateless:
+    action: write
+    variant: rest
+    route: signup
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: profile
+        action: write
+        route: create
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: user-preference
+        action: write
+        route: update
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: localization
+        action: write
+        route: update
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: notification
+        action: write
+        route: signup
+
+# Log in
+- stateless:
+    action: write
+    variant: rest
+    route: login
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: profile
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: user-preference
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: localization
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: notification
+        action: write
+        route: login
+
+# Log out
+- stateless:
+    action: write
+    variant: rest
+    route: logout
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: notification
+        action: write
+        route: logout
+
+# Authenticate
+- stateless:
+    action: read
+    variant: rest
+    route: authenticate
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: read
+        size: small

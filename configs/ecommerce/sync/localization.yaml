@@ -1,0 +1,31 @@
+# Localization service
+# Manage User localization
+version: v0.0.4
+name: localization
+ingressAdapters:
+# Get User localization
+- stateless:
+    variant: rest
+    action: write
+    route: update
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: write
+        size: small
+
+# Update User localization
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: user-db
+        variant: mongo
+        action: read
+        size: small
+

@@ -1,0 +1,95 @@
+# Notification service
+# Manages notifications
+version: v0.0.4
+name: notification
+ingressAdapters:
+# Sign up
+- stateless:
+    variant: rest
+    action: write
+    route: signup
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Log in
+- stateless:
+    action: write
+    variant: rest
+    route: login
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Log out
+- stateless:
+    action: write
+    variant: rest
+    route: logout
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order create
+- stateless:
+    action: write
+    variant: rest
+    route: ordercreate
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order cancel
+- stateless:
+    action: write
+    variant: rest
+    route: ordercancel
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order rescheduled 
+- stateless:
+    action: write
+    variant: rest
+    route: orderrescheduled
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small
+
+# Order returned 
+- stateless:
+    action: write
+    variant: rest
+    route: return
+  steps:
+  - egressAdapter:
+      stateful:
+        name: customer-db
+        variant: mongo
+        action: write
+        size: small

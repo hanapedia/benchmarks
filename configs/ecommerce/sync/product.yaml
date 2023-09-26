@@ -1,0 +1,78 @@
+# Product Information service
+# Manage products
+version: v0.0.4
+name: product
+ingressAdapters:
+# Get Many products
+- stateless:
+    variant: rest
+    action: read
+    route: getmany
+  steps:
+  - egressAdapter:
+      stateful:
+        name: content-db
+        variant: mongo
+        action: read
+        size: large
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: inventory
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: localization
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: discount
+        action: read
+        route: get
+
+# Get Single products detail
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: content-db
+        variant: mongo
+        action: read
+        size: small
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: inventory
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: localization
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: discount
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: user-preference
+        action: read
+        route: get
+  - egressAdapter:
+      stateless:
+        variant: rest
+        service: review
+        action: read
+        route: get

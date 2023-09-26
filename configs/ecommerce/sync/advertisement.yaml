@@ -1,0 +1,18 @@
+# Advertisement service
+# Manage advertisements for users
+version: v0.0.5
+name: advertisement
+ingressAdapters:
+# Get advertisement
+- stateless:
+    variant: rest
+    action: read
+    route: get
+  steps:
+  - egressAdapter:
+      stateful:
+        name: marketing-db
+        variant: mongo
+        action: read
+        size: small
+
