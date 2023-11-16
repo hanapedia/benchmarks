@@ -1,0 +1,17 @@
+version: dev
+name: productcatalog
+adapters:
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: ListProducts
+    payload:
+      size: 1260
+  steps: []
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: GetProduct
+    payload:
+      size: 140
+  steps: []

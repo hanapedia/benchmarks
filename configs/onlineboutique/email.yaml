@@ -1,0 +1,10 @@
+version: dev
+name: email
+adapters:
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: SendOrderConfirmation
+    payload:
+      size: 0
+  steps: []

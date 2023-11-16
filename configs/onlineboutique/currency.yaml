@@ -1,0 +1,17 @@
+version: dev
+name: currency
+adapters:
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: Convert
+    payload:
+      size: 16
+  steps: []
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: GetSupportedCurrency
+    payload:
+      size: 100
+  steps: []

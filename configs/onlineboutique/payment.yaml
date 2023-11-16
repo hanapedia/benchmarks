@@ -1,0 +1,10 @@
+version: dev
+name: payment
+adapters:
+- server:
+    action: simpleRpc
+    variant: grpc
+    route: Charge
+    payload:
+      size: 16
+  steps: []
