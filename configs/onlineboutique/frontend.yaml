@@ -5,6 +5,8 @@ adapters:
     action: get
     variant: rest
     route: root
+    payload:
+      size: 10216
   steps:
   - adapter:
       invocation:
@@ -51,6 +53,8 @@ adapters:
     action: get
     variant: rest
     route: product
+    payload:
+      size: 7700
   steps:
   - adapter:
       invocation:
@@ -140,6 +144,8 @@ adapters:
     action: get
     variant: rest
     route: cart
+    payload:
+      size: 6650
   steps:
   - adapter:
       invocation:
@@ -237,6 +243,8 @@ adapters:
     action: post
     variant: rest
     route: cart
+    payload:
+      size: 3
   steps:
   - adapter:
       invocation:
@@ -259,6 +267,8 @@ adapters:
     action: post
     variant: rest
     route: cart/empty
+    payload:
+      size: 3
   steps:
   - adapter:
       invocation:
@@ -289,6 +299,8 @@ adapters:
     action: post
     variant: rest
     route: cart/checkout
+    payload:
+      size: 6242
   steps:
   - adapter:
       invocation:
